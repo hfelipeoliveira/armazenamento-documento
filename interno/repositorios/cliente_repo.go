@@ -15,6 +15,12 @@ func (c *ClienteRepositorio) RecuperarPorId(id string) (*dominio.Cliente, error)
 	return &cliente, tx.Error
 }
 
+func (c *ClienteRepositorio) Listar() ([]*dominio.Cliente, error) {
+	var clientes []*dominio.Cliente
+	tx := c.Db.Find(&clientes)
+	return clientes, tx.Error
+}
+
 func (c *ClienteRepositorio) Criar(cliente *dominio.Cliente) error {
 	tx := c.Db.Create(cliente)
 	return tx.Error

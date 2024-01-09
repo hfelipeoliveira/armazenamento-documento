@@ -7,10 +7,12 @@ import (
 
 type ClienteRepositorio interface {
 	RecuperarPorId(id string) (*dominio.Cliente, error)
+	Listar() ([]*dominio.Cliente, error)
 	Criar(*dominio.Cliente) error
 }
 
 type ClienteServico interface {
-	Recuperar(id string) (*dominio.Cliente, error)
+	RecuperarPorId(id string) (*dominio.Cliente, error)
+	Listar() ([]*dominio.Cliente, error)
 	Criar(dto.NovoCliente) (*dominio.Cliente, error)
 }

@@ -20,10 +20,19 @@ func Novo(clienteRepositorio portas.ClienteRepositorio) *Servico {
 	}
 }
 
-func (srv *Servico) Recuperar(id string) (*dominio.Cliente, error) {
+func (srv *Servico) RecuperarPorId(id string) (*dominio.Cliente, error) {
 	cliente, err := srv.clienteRepositorio.RecuperarPorId(id)
 	if err != nil {
 		return nil, errors.New("Erro ao recuperar cliente do repositório")
+	}
+
+	return cliente, nil
+}
+
+func (srv *Servico) Listar() ([]*dominio.Cliente, error) {
+	cliente, err := srv.clienteRepositorio.Listar()
+	if err != nil {
+		return nil, errors.New("Erro ao recuperar clientes do repositório")
 	}
 
 	return cliente, nil

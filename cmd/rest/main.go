@@ -47,6 +47,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 
 	r.Route("/rest/v1/clientes", func(r chi.Router) {
+		r.Get("/", manipulador.ClienteListar)
 		r.Get("/{id}", manipulador.ClienteRecuperarPorId)
 	})
 
