@@ -10,17 +10,17 @@ import (
 	"github.com/rs/xid"
 )
 
-type servico struct {
+type Servico struct {
 	clienteRepositorio portas.ClienteRepositorio
 }
 
-func Novo(clienteRepositorio portas.ClienteRepositorio) *servico {
-	return &servico{
+func Novo(clienteRepositorio portas.ClienteRepositorio) *Servico {
+	return &Servico{
 		clienteRepositorio: clienteRepositorio,
 	}
 }
 
-func (srv *servico) Recuperar(id string) (*dominio.Cliente, error) {
+func (srv *Servico) Recuperar(id string) (*dominio.Cliente, error) {
 	cliente, err := srv.clienteRepositorio.RecuperarPorId(id)
 	if err != nil {
 		return nil, errors.New("Erro ao recuperar cliente do repositório")
@@ -29,7 +29,7 @@ func (srv *servico) Recuperar(id string) (*dominio.Cliente, error) {
 	return cliente, nil
 }
 
-func (srv *servico) Criar(novoCliente dto.NovoCliente) (*dominio.Cliente, error) {
+func (srv *Servico) Criar(novoCliente dto.NovoCliente) (*dominio.Cliente, error) {
 	cliente := dominio.Cliente{
 		ID:          xid.New().String(),
 		Cnpj:        novoCliente.Cnpj,

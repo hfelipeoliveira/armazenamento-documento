@@ -2,9 +2,13 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/dto"
+	"github.com/hfelipeoliveira/armazenamento-documento/interno/manipuladores/rest"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/nucleo/servicos/clientesrv"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/repositorios"
 	"github.com/joho/godotenv"
@@ -33,6 +37,20 @@ func main() {
 		RazaoSocial: "Teste massa",
 	})
 
+	manipulador := rest.NovoManipulador(clienteServico)
+
+	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	r.Route("/rest/v1/clientes", func(r chi.Router) {
+		r.Get("/{id}", manipulador.ClienteRecuperarPorId)
+	})
+
+	http.ListenAndServe(":80", r)
 }
 
 func lerVariaveisDeAmbiente() {

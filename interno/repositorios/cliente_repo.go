@@ -11,7 +11,7 @@ type ClienteRepositorio struct {
 
 func (c *ClienteRepositorio) RecuperarPorId(id string) (*dominio.Cliente, error) {
 	var cliente dominio.Cliente
-	tx := c.Db.Preload("clientes").First(&cliente, "id = ?", id)
+	tx := c.Db.First(&cliente, "id = ?", id)
 	return &cliente, tx.Error
 }
 
