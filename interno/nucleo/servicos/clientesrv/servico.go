@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/go-playground/validator"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/dto"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/nucleo/dominio"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/nucleo/portas"
@@ -12,11 +13,13 @@ import (
 
 type Servico struct {
 	clienteRepositorio portas.ClienteRepositorio
+	validate           *validator.Validate
 }
 
 func Novo(clienteRepositorio portas.ClienteRepositorio) *Servico {
 	return &Servico{
 		clienteRepositorio: clienteRepositorio,
+		validate:           validator.New(),
 	}
 }
 
@@ -39,6 +42,11 @@ func (srv *Servico) Listar() ([]*dominio.Cliente, error) {
 }
 
 func (srv *Servico) Criar(novoCliente dto.NovoCliente) (*dominio.Cliente, error) {
+	err := srv.validate.Struct(&novoCliente)
+	if err != nil {
+		return nil, err
+	}
+
 	cliente := dominio.Cliente{
 		ID:          xid.New().String(),
 		Cnpj:        novoCliente.Cnpj,
@@ -47,8 +55,8 @@ func (srv *Servico) Criar(novoCliente dto.NovoCliente) (*dominio.Cliente, error)
 		CriadoEm:    time.Now(),
 	}
 
-	err := srv.clienteRepositorio.Criar(&cliente)
-	if err == nil {
+	err = srv.clienteRepositorio.Criar(&cliente)
+	if err != nil {
 		return nil, err
 	}
 

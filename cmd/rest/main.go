@@ -48,6 +48,7 @@ func main() {
 
 	r.Route("/rest/v1/clientes", func(r chi.Router) {
 		r.Get("/", manipulador.ClienteListar)
+		r.Post("/", manipulador.ClienteCriar)
 		r.Get("/{id}", manipulador.ClienteRecuperarPorId)
 	})
 
