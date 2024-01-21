@@ -10,6 +10,7 @@ import (
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/dto"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/manipuladores/rest"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/nucleo/servicos/clientesrv"
+	"github.com/hfelipeoliveira/armazenamento-documento/interno/nucleo/servicos/validadorsrv"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/repositorios"
 	"github.com/joho/godotenv"
 )
@@ -29,11 +30,13 @@ func main() {
 		panic(err)
 	}
 
+	validador := validadorsrv.Novo()
+
 	clienteRepositorio := repositorios.ClienteRepositorio{Db: mysql}
 
-	clienteServico := clientesrv.Novo(&clienteRepositorio)
+	clienteServico := clientesrv.Novo(&clienteRepositorio, &validador)
 	clienteServico.Criar(dto.NovoCliente{
-		Cnpj:        "12345678901234",
+		Cnpj:        "123456789012345",
 		RazaoSocial: "Teste massa",
 	})
 

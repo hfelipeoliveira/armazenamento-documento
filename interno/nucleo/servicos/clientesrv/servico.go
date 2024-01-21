@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/go-playground/validator"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/dto"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/nucleo/dominio"
 	"github.com/hfelipeoliveira/armazenamento-documento/interno/nucleo/portas"
@@ -13,13 +12,13 @@ import (
 
 type Servico struct {
 	clienteRepositorio portas.ClienteRepositorio
-	validate           *validator.Validate
+	validador          portas.Validador
 }
 
-func Novo(clienteRepositorio portas.ClienteRepositorio) *Servico {
+func Novo(clienteRepositorio portas.ClienteRepositorio, validador portas.Validador) *Servico {
 	return &Servico{
 		clienteRepositorio: clienteRepositorio,
-		validate:           validator.New(),
+		validador:          validador,
 	}
 }
 
@@ -42,7 +41,7 @@ func (srv *Servico) Listar() ([]*dominio.Cliente, error) {
 }
 
 func (srv *Servico) Criar(novoCliente dto.NovoCliente) (*dominio.Cliente, error) {
-	err := srv.validate.Struct(&novoCliente)
+	err := srv.validador.Validar(&novoCliente)
 	if err != nil {
 		return nil, err
 	}
